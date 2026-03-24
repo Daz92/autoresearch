@@ -1,7 +1,6 @@
 # autoresearch (CandleMcStickFace evaluator)
 
-<<<<<<< Updated upstream
-This package now hosts the CandleMcStickFace v1 fixed-judge evaluation surfaces used to improve desk behavior safely through bounded screener-rules mutation and deterministic replay.
+`autoresearch` is the workspace framework for improving CandleMcStickFace safely through bounded screener-rules mutation, deterministic replay, and fixed judge outcomes.
 
 ## What is implemented
 
@@ -16,6 +15,18 @@ The `autoresearch.candlemcstickface` package currently includes:
 - Deterministic replay surface (`replay.py`)
 - Fixed judge and outcomes (`judge.py`)
 - Append-only registry API (`registry.py`)
+- Paper handoff adapter (`integrations/candlemcstickface.py`)
+
+## Scope
+
+Version 1 is intentionally narrow:
+
+- one desk integration: **CandleMcStickFace**
+- a **fixed judge** owned by the framework
+- a bounded mutation surface where candidates only change allowlisted screener-rules fields
+- a paper-trading handoff boundary instead of live broker logic inside this package
+
+The repo does **not** implement live trading. Promotion stops at the desk-owned handoff boundary.
 
 ## Canonical desk-state ownership
 
@@ -23,13 +34,22 @@ Canonical ownership metadata lives in:
 
 - `agents/candlemcstickface/data/schema-version.yaml`
 
-v1 owner keys:
+Current owner keys:
 
 - `working_list`
 - `screener_rules`
 - `opportunity_queue`
 
 All replay and evaluation inputs should be sourced from these canonical desk-owned surfaces.
+
+## Capability profile workflow
+
+Canonical capability requirements:
+
+- `agents/candlemcstickface/data/capability-profiles.yaml`
+- `agents/candlemcstickface/data/source-coverage-matrix.yaml`
+
+If you change agent requirements or desk-side evaluation policy, update those files first and keep the AGENTS/TOOLS docs aligned.
 
 ## Quality admission states
 
@@ -40,7 +60,7 @@ Watcher artifact admission returns one of:
 - `insufficient`
 - `invalid`
 
-Use this status to decide whether a cycle is fully evaluable or should be held/invalidated.
+Use this status to decide whether a cycle is fully evaluable or should be held or invalidated.
 
 ## Mutation and judge outcomes
 
@@ -53,94 +73,29 @@ Judge outcomes are fixed to:
 - `revert`
 - `invalid`
 
-No other outcome string should be introduced in downstream logic.
+No downstream layer should invent extra outcome strings.
 
-## Capability profile workflow
+## Repository layout
 
-Canonical capability requirements:
-
-- `agents/candlemcstickface/data/capability-profiles.yaml`
-- `agents/candlemcstickface/data/source-coverage-matrix.yaml`
-
-If you change agent instructions/requirements, update these two files first and keep AGENTS/TOOLS docs aligned.
+```text
+src/autoresearch/           Python package root for the framework
+tests/                      framework and desk integration tests
+legacy/karpathy_seed/       archived Karpathy training seed and original docs
+pyproject.toml              project metadata and test/build configuration
+```
 
 ## Verification commands
 
-Run from repository root:
+Run from the workspace root:
 
 ```bash
-pytest autoresearch/tests/candlemcstickface -v
+uv run --project autoresearch --extra dev pytest autoresearch/tests/candlemcstickface -v
 PYTHONPATH=autoresearch/src python -c "from autoresearch.candlemcstickface.judge import JudgeOutcome; print('ok')"
 uv run --project autoresearch --extra dev python -m build
 ```
 
 Expected:
 
-- test suite passes
+- desk evaluator test suite passes
 - import smoke prints `ok`
 - sdist/wheel build succeeds
-=======
-`autoresearch` is being rebuilt as a package-based framework for improving **trading signal agents** before paper-trading handoff.
-
-## v1 scope
-
-Version 1 is intentionally narrow:
-
-- one plugin family: **signal-agent**
-- a **fixed judge** owned by the framework
-- a **mutable plugin surface** where candidates only propose standardized signals
-- a paper-trading **handoff boundary** into desk-owned execution contracts instead of live broker logic inside this repo
-
-This repository now contains the v1 core framework contracts and boundaries for Tasks 2-7.
-
-## Repository layout
-
-```text
-src/autoresearch/           Python package root for the new framework
-tests/                      scaffold and framework tests
-legacy/karpathy_seed/       archived Karpathy training seed and original docs
-pyproject.toml              project metadata, src layout, pytest config
-```
-
-## Legacy seed archive
-
-The original LLM training seed has been preserved under `legacy/karpathy_seed/`.
-
-- legacy code: `legacy/karpathy_seed/prepare.py` and `legacy/karpathy_seed/train.py`
-- original operator prompt: `legacy/karpathy_seed/program.md`
-- original project context: `legacy/karpathy_seed/README.md`
-
-Use that directory for historical reference only while the new trading framework is built under `src/`.
-
-## Development setup
-
-```bash
-uv sync --extra dev
-uv run --extra dev pytest tests/test_scaffold.py -v
-uv run --extra dev pytest tests -v
-uv run python -c "import autoresearch; print('ok')"
-```
-
-## Implemented framework surface
-
-Implemented in `src/autoresearch/`:
-
-- `contracts.py`: typed contracts for snapshots, signal proposals, metrics, promotion states, and paper handoff payloads
-- `provenance.py`: strict time-order validation (`market`, `symbol`, `as_of`, `available_at`, provenance)
-- `score.py`: versioned composite score policy (`v1`)
-- `judge.py`: fixed promotion decisions (`advance`, `hold`, `reject`, `invalid`) with hard gates
-- `registry.py`: JSONL run registry for candidate/versioned score auditability
-- `run_brief.py`: human-authored run-brief model/loader
-- `plugins/signal_agent/`: plugin family and separate market adapters for US equities and crypto
-- `integrations/candlemcstickface.py`: paper handoff payload mapping into desk TradeIntent contract shape
-
-The repo does **not** implement live trading. Promotion stops at the paper handoff boundary.
-
-## Verification commands
-
-```bash
-uv run --extra dev pytest tests -v
-uv run python -c "import autoresearch; print('ok')"
-uv run python -m build
-```
->>>>>>> Stashed changes
