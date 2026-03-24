@@ -1,5 +1,6 @@
 # autoresearch (CandleMcStickFace evaluator)
 
+<<<<<<< Updated upstream
 This package now hosts the CandleMcStickFace v1 fixed-judge evaluation surfaces used to improve desk behavior safely through bounded screener-rules mutation and deterministic replay.
 
 ## What is implemented
@@ -78,3 +79,68 @@ Expected:
 - test suite passes
 - import smoke prints `ok`
 - sdist/wheel build succeeds
+=======
+`autoresearch` is being rebuilt as a package-based framework for improving **trading signal agents** before paper-trading handoff.
+
+## v1 scope
+
+Version 1 is intentionally narrow:
+
+- one plugin family: **signal-agent**
+- a **fixed judge** owned by the framework
+- a **mutable plugin surface** where candidates only propose standardized signals
+- a paper-trading **handoff boundary** into desk-owned execution contracts instead of live broker logic inside this repo
+
+This repository now contains the v1 core framework contracts and boundaries for Tasks 2-7.
+
+## Repository layout
+
+```text
+src/autoresearch/           Python package root for the new framework
+tests/                      scaffold and framework tests
+legacy/karpathy_seed/       archived Karpathy training seed and original docs
+pyproject.toml              project metadata, src layout, pytest config
+```
+
+## Legacy seed archive
+
+The original LLM training seed has been preserved under `legacy/karpathy_seed/`.
+
+- legacy code: `legacy/karpathy_seed/prepare.py` and `legacy/karpathy_seed/train.py`
+- original operator prompt: `legacy/karpathy_seed/program.md`
+- original project context: `legacy/karpathy_seed/README.md`
+
+Use that directory for historical reference only while the new trading framework is built under `src/`.
+
+## Development setup
+
+```bash
+uv sync --extra dev
+uv run --extra dev pytest tests/test_scaffold.py -v
+uv run --extra dev pytest tests -v
+uv run python -c "import autoresearch; print('ok')"
+```
+
+## Implemented framework surface
+
+Implemented in `src/autoresearch/`:
+
+- `contracts.py`: typed contracts for snapshots, signal proposals, metrics, promotion states, and paper handoff payloads
+- `provenance.py`: strict time-order validation (`market`, `symbol`, `as_of`, `available_at`, provenance)
+- `score.py`: versioned composite score policy (`v1`)
+- `judge.py`: fixed promotion decisions (`advance`, `hold`, `reject`, `invalid`) with hard gates
+- `registry.py`: JSONL run registry for candidate/versioned score auditability
+- `run_brief.py`: human-authored run-brief model/loader
+- `plugins/signal_agent/`: plugin family and separate market adapters for US equities and crypto
+- `integrations/candlemcstickface.py`: paper handoff payload mapping into desk TradeIntent contract shape
+
+The repo does **not** implement live trading. Promotion stops at the paper handoff boundary.
+
+## Verification commands
+
+```bash
+uv run --extra dev pytest tests -v
+uv run python -c "import autoresearch; print('ok')"
+uv run python -m build
+```
+>>>>>>> Stashed changes

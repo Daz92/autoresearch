@@ -71,7 +71,10 @@ dependencies = [
 [package.optional-dependencies]
 dev = [
     { name = "build" },
+<<<<<<< Updated upstream
     { name = "pydantic" },
+=======
+>>>>>>> Stashed changes
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -85,7 +88,10 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "pyarrow", specifier = ">=21.0.0" },
+<<<<<<< Updated upstream
     { name = "pydantic", marker = "extra == 'dev'", specifier = ">=2" },
+=======
+>>>>>>> Stashed changes
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-asyncio", marker = "extra == 'dev'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },

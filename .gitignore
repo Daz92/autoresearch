@@ -4,13 +4,19 @@ __pycache__/
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
+.eggs/
 
 # Virtual environments
 .venv
 worktrees/
 results/
 queue/
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+registry/
 
 # Agent prompt files (generated per-session by launchers)
 CLAUDE.md
