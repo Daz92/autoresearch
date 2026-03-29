@@ -96,7 +96,25 @@ def test_rejects_unknown_allowlisted_path(
     )
 
 
-def test_rejects_noncanonical_path_even_with_allowed_leaf(
+def test_rejects_rule_name_mutation(monkeypatch, autoresearch_src_root: Path) -> None:
+    monkeypatch.syspath_prepend(str(autoresearch_src_root))
+    mutation_gate = import_module("autoresearch.candlemcstickface.mutation_gate")
+
+    proposal = {
+        "changes": {
+            "screener_rules.rules.0.name": "Momentum v2",
+        }
+    }
+
+    result = mutation_gate.check_mutation_eligibility(proposal)
+
+    assert result.allowed is False
+    assert result.reasons == (
+        "rejected:field_not_allowlisted_path:screener_rules.rules.0.name",
+    )
+
+
+def test_rejects_noncanonical_path_even_with_string_leaf(
     monkeypatch, autoresearch_src_root: Path
 ) -> None:
     monkeypatch.syspath_prepend(str(autoresearch_src_root))

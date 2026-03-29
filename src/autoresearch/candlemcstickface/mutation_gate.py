@@ -14,7 +14,6 @@ ALLOWED_RULE_FIELDS = {
     "min_market_cap",
     "min_price",
     "max_price",
-    "name",
     "rationale",
 }
 
@@ -65,7 +64,7 @@ def _check_field_allowed(field_name: str) -> str | None:
 def _check_value_bounds(field_name: str, value: object) -> str | None:
     leaf = _extract_leaf_field(field_name)
 
-    if leaf in {"name", "rationale"}:
+    if leaf == "rationale":
         if not isinstance(value, str) or not value.strip():
             return f"rejected:invalid_type_or_empty:{field_name}"
         return None
