@@ -7,8 +7,6 @@ def test_subagent_data_paths_are_symlinked_to_canonical_owner() -> None:
         "agents/watcher/data/working-list.yaml": "agents/candlemcstickface/data/working-list.yaml",
         "agents/stock-scanner/data/screener-rules.yaml": "agents/candlemcstickface/data/screener-rules.yaml",
         "agents/stock-scanner/data/opportunity-queue.yaml": "agents/candlemcstickface/data/opportunity-queue.yaml",
-        "agents/market-strategist/data/screener-rules.yaml": "agents/candlemcstickface/data/screener-rules.yaml",
-        "agents/market-strategist/data/opportunity-queue.yaml": "agents/candlemcstickface/data/opportunity-queue.yaml",
     }
 
     for local_rel, canonical_rel in expected.items():

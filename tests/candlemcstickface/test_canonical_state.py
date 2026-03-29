@@ -40,6 +40,7 @@ def test_repo_schema_version_declares_canonical_owners(
         "working_list": "agents/candlemcstickface/data/working-list.yaml",
         "screener_rules": "agents/candlemcstickface/data/screener-rules.yaml",
         "opportunity_queue": "agents/candlemcstickface/data/opportunity-queue.yaml",
+        "risk_config": "agents/candlemcstickface/data/risk-config.yaml",
     }
 
     assert state.version == 1
