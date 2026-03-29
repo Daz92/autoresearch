@@ -46,3 +46,24 @@ def test_load_registry_handles_missing_file(
     records = registry.load_registry(tmp_path / "missing.json")
 
     assert records == ()
+
+
+def test_append_registry_record_rewrites_file_atomically(
+    monkeypatch, autoresearch_src_root: Path, tmp_path: Path
+) -> None:
+    monkeypatch.syspath_prepend(str(autoresearch_src_root))
+    contracts = import_module("autoresearch.candlemcstickface.contracts")
+    registry = import_module("autoresearch.candlemcstickface.registry")
+
+    path = tmp_path / "registry.json"
+    registry.append_registry_record(
+        path,
+        bundle_hash="bundle-a",
+        outcome=contracts.PromotionOutcome.HOLD,
+        score_delta=0.0,
+        details={"reason": "initial"},
+        created_at="2026-03-29T12:00:00Z",
+    )
+
+    assert path.read_text(encoding="utf-8").endswith("\n")
+    assert list(tmp_path.glob("registry.json.tmp")) == []

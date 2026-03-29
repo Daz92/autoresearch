@@ -25,6 +25,15 @@ def _compute_experiment_id(payload: Mapping[str, object]) -> str:
     return hashlib.sha256(encoded).hexdigest()[:16]
 
 
+def _write_json_atomically(path: Path, payload: list[dict[str, object]]) -> None:
+    temp_path = path.with_suffix(path.suffix + ".tmp")
+    serialized = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    with temp_path.open("w", encoding="utf-8") as handle:
+        handle.write(serialized)
+        handle.flush()
+    temp_path.replace(path)
+
+
 def append_registry_record(
     registry_path: str | Path,
     *,
@@ -70,9 +79,7 @@ def append_registry_record(
 
     existing.append(record)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(existing, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    _write_json_atomically(path, existing)
 
     return RegistryRecord(
         experiment_id=experiment_id,
