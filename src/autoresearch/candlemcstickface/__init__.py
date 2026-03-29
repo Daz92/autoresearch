@@ -6,8 +6,10 @@ from . import (
     contracts,
     judge,
     mutation_gate,
+    normalization,
     registry,
     replay,
+    resume_state,
 )
 
 __all__ = [
@@ -18,6 +20,8 @@ __all__ = [
     "contracts",
     "judge",
     "mutation_gate",
+    "normalization",
     "registry",
     "replay",
+    "resume_state",
 ]
